@@ -7,10 +7,12 @@ import {
  
   HomeOutlined,
   MenuOutlined,
+  SearchOutlined,
+  UserOutlined,
  
   
 } from '@ant-design/icons';
-import { MdGroup, MdMailOutline, MdOutlineAutoGraph, MdPhone, MdShoppingCart, MdTableBar, MdVideocam } from "react-icons/md";
+import { MdGroup, MdLogin, MdMailOutline, MdOutlineAutoGraph, MdPhone, MdShoppingCart, MdTableBar, MdVideocam } from "react-icons/md";
 import { Badge, UncontrolledDropdown, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem } from 'reactstrap';
 
 import { NavLink } from 'react-router-dom'
@@ -19,9 +21,7 @@ import { Link,withRouter} from 'react-router-dom';
 import axios from 'axios'
 import logo from '../assets/wagerwyze_logo.jpeg';
 import bkgrnd_imge from '../assets/purple_bg.jpg';
-
 import * as serverconfig from "./serverconn.js";
-
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -32,10 +32,7 @@ const { Meta } = Card;
 const HomeLayout = (props) => {
   const [isMobile, setIsMobile] = useState(false);
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [login_visible, setlogin_visible] = useState(false);
-  const [shownotificationmodal, setshownotificationmodal] = useState(false);
-  const [numberofnotifications, setnumberofnotifications] = useState(0);
-
+  const [user_profile, setuser_profile] = useState({});
 
   // Function to check if the screen size is mobile
   const checkIsMobile = () => {
@@ -43,10 +40,19 @@ const HomeLayout = (props) => {
   };
 
 
+  //check login status
+  const check_login=()=>{
+    if(localStorage.getItem("login")){
+      setuser_profile(JSON.parse(localStorage.getItem("login")))
+    }
+  }
 
   useEffect(() => {
     // Check initial screen size
     checkIsMobile();
+
+    //check login status
+    check_login()
 
     // Add event listener for screen resize
     window.addEventListener('resize', checkIsMobile);
@@ -59,17 +65,13 @@ const HomeLayout = (props) => {
 
 
 
-
     return (
-
-         <div 
-         
-         >
-             <Layout className="site-layout" style={{background:'#fff',margin:10}} >
+         <div >
+             <Layout className="site-layout" style={{background:'#fff',margin:10,display:'flex'}} >
             
-            {/** Header */}
+             {/** Header */}
 
-          <div style={{marginBottom:3}} >
+              <div style={{marginBottom:3}} >
           
                 {
                   isMobile===true ? 
@@ -92,14 +94,40 @@ const HomeLayout = (props) => {
                       width={200}         
                     >
                       <Menu mode="inline" >
-                      <Menu.Item key="1" onClick={() => {
-                        setDrawerVisible(false);
-                      }}> <NavLink to='/'><span> <HomeOutlined/> Home</span></NavLink></Menu.Item>
+                      <Menu.Item key="0"><NavLink to='/'><span> Wagerwyze</span></NavLink></Menu.Item>
                       
+                      {
+                      JSON.stringify(user_profile)==="{}"?
+                      <Menu.Item key="1"><NavLink to='/signup'><span style={{color:'#5D3FD3',fontWeight:'bolder'}}> JOIN NOW</span></NavLink></Menu.Item>
+                      :
+                      null
+                      }
+                      
+
+                      {
+                      JSON.stringify(user_profile)==="{}"?
+                      <Menu.Item key="2"><NavLink to='/login'><span> <MdLogin/> LOGIN</span></NavLink></Menu.Item>
+                      :
+                      null
+                      }
+
+                      {
+                        JSON.stringify(user_profile)!="{}"?
+                        <Menu.Item key="3"><NavLink to='/account'><span> <UserOutlined/> ACCOUNT</span></NavLink></Menu.Item>
+                        :
+                        null
+
+                      }
+                     
+                      
+                      
+                      {/* <Menu.Item key="1" onClick={() => { setDrawerVisible(false); }}> <NavLink to='/'><span> <HomeOutlined/> Home</span></NavLink></Menu.Item>
                       <Menu.Item key="4"><NavLink to='/teams'><span> <MdGroup/> Teams</span></NavLink></Menu.Item>
                       <Menu.Item key="5"><NavLink to='/statistics'><span> <MdOutlineAutoGraph/>Scores</span></NavLink></Menu.Item>
                       <Menu.Item key="6"><NavLink to='/videoanalysis'><span> <MdVideocam/> Video Analysis</span></NavLink></Menu.Item>
-                      <Menu.Item key="3"><NavLink to='/contact'><span> <MdPhone/> Contact Us</span></NavLink></Menu.Item>
+                      <Menu.Item key="3"><NavLink to='/contact'><span> <MdPhone/> Contact Us</span></NavLink></Menu.Item> */}
+
+
 
                     </Menu>
                     </Drawer>
@@ -107,24 +135,21 @@ const HomeLayout = (props) => {
 
                     <div style={{display:'flex',justifyContent:'space-evenly',alignItems:'center',flexDirection:'row',margin:20}}>
                       
-                          <span style={{margin:2}}>
-                              <Dropdown.Button 
-                                overlay={(    
-                                <Menu >
-                                  <Menu.Item key="1" 
-                                  onClick={()=>{
-                                    setlogin_visible(true)
-                                  }}>
-                                    Continue 
-                                  </Menu.Item> 
-                                </Menu>)}
-                                  onClick={()=>{
-                                      setlogin_visible(true)
-                                  }}
-                              >
-                                  Login
-                              </Dropdown.Button>
-                          </span>
+                        <Menu 
+                            mode='horizontal'
+                              style={{
+                                flex: 1,
+                                minWidth: 0,
+                              }}
+                            >
+                              <Menu.Item key="1" >
+                                <SearchOutlined />
+                              </Menu.Item> 
+                              
+                              <Menu.Item key="2">
+                                <Avatar icon={<UserOutlined />} /> 
+                              </Menu.Item> 
+                          </Menu>
 
                     </div>
 
@@ -132,12 +157,12 @@ const HomeLayout = (props) => {
               : 
 
                    <div style={{display:'flex',justifyContent:'space-evenly',alignItems:'center'}}>
-                        <Image
-                          width={100}
-                          height={100}
-                          src={logo}   
-                          preview={false} 
-                          />
+                      <Image
+                        width={50}
+                        height={50}
+                        src={logo}   
+                        preview={false} 
+                        />
 
                       <Menu mode='horizontal'
                         style={{
@@ -145,69 +170,105 @@ const HomeLayout = (props) => {
                           minWidth: 0,
                         }}
                       >
+                      <Menu.Item key="0"><NavLink to='/'><span> Wagerwyze</span></NavLink></Menu.Item>
+                     
+                      {
+                      JSON.stringify(user_profile)==="{}"?
+                      <Menu.Item key="1"><NavLink to='/signup'><span style={{color:'#5D3FD3',fontWeight:'bolder'}}> JOIN NOW</span></NavLink></Menu.Item>
+                      :
+                      null
+                      }
+                      
 
-                      <Menu.Item key="1"> <NavLink to='/'><span> <HomeOutlined/ > Home</span></NavLink></Menu.Item>
+                      {
+                      JSON.stringify(user_profile)==="{}"?
+                      <Menu.Item key="2"><NavLink to='/login'><span> <MdLogin/> LOGIN</span></NavLink></Menu.Item>
+                      :
+                      null
+                      }
+
+                      {
+                        JSON.stringify(user_profile)!="{}"?
+                        <Menu.Item key="3"><NavLink to='/account'><span> <UserOutlined/> ACCOUNT</span></NavLink></Menu.Item>
+                        :
+                        null
+                      }
+
+                      {/* <Menu.Item key="1"> <NavLink to='/'><span> <HomeOutlined/ > Home</span></NavLink></Menu.Item>
                       <Menu.Item key="4"><NavLink to='/teams'><span> <MdGroup/> Teams</span></NavLink></Menu.Item>
                       <Menu.Item key="5"><NavLink to='/statistics'><span> <MdOutlineAutoGraph/>Scores</span></NavLink></Menu.Item>
                       <Menu.Item key="6"><NavLink to='/videoanalysis'><span> <MdVideocam/> Video Analysis</span></NavLink></Menu.Item>
-
-                      <Menu.Item key="3"><NavLink to='/contact'><span> <MdPhone/> Contact Us</span></NavLink></Menu.Item>
+                      <Menu.Item key="3"><NavLink to='/contact'><span> <MdPhone/> Contact Us</span></NavLink></Menu.Item> 
+                      */}
 
                       </Menu>
 
-                      <div style={{display:'flex',justifyContent:'space-evenly',alignItems:'center',flexDirection:'row'}}>
-                    
-                          <span style={{margin:2}}>
-                              <Dropdown.Button 
-                                overlay={(    
-                                <Menu >
-                                  <Menu.Item key="1" 
-                                  onClick={()=>{
-                                    setlogin_visible(true)
-                                  }}>
-                                    Continue 
-                                  </Menu.Item> 
-                                </Menu>)}
 
-                                  onClick={()=>{
-                                      setlogin_visible(true)
-                                  
-                                  }}
-
-                              >
-                                  Signup
-                              </Dropdown.Button>
-                            
-                          </span>
-
-                        </div>
+                      <Menu 
+                        mode='horizontal'
+                          style={{
+                            flex: 1,
+                            minWidth: 0,
+                          }}
+                        >
+                          <Menu.Item key="1" >
+                            <SearchOutlined />
+                          </Menu.Item> 
+                          
+                          <Menu.Item key="2">
+                          <Avatar style={{ backgroundColor: '#5D3FD3' }} icon={<UserOutlined />} />
+                          </Menu.Item> 
+                      </Menu>
 
                   </div>
 
                 }
 
               </div>
-               
+
+
+            {
+              /** new logo and client image */
+            }
+
+           {/* <div style={{display:'flex',flexDirection:'row',justifyContent:'space-between',margin:10}}>
+              <div style={{display:'flex',width:'80%',justifyContent:'center'}}>
+                 <Image
+                  width={100}
+                  height={100}
+                  src={logo}   
+                  preview={false} 
+                  />
+              </div>
+
+              <div style={{display:'flex',width:'20%',justifyContent:'right'}}>
+                <Image
+                    width={50}
+                    height={50}
+                    src={''}   
+                    preview={false} 
+                    />
+              </div>
+             </div> 
+             
+             */}
+
 
               {/** content */}
               <Content 
-
                 style={{
                   backgroundImage: `url(${bkgrnd_imge})`, // Set the background image
                   backgroundSize: 'cover', // Cover the entire layout
                   backgroundPosition: 'center', // Center the image
                   minHeight: '100vh', // Ensure the background covers the full viewport height
-                  margin: '0 2px'
+                  margin: '0 2px',
                 }}
          
               // style={{ ,background:'#fff' }}
-              
               >
 
-              <div className="site-layout-background" >
                  {/** Semi-transparent overlay */}
-          
-
+      
               {
                  isMobile ?
                   <p style={{display:'flex',justifyContent:'center',alignSelf:'center'}}>
@@ -226,16 +287,15 @@ const HomeLayout = (props) => {
           
              {props.children}
 
-           </div>
-         </Content>
+              </Content>
 
         
-        {/** Footer */}
-        <Footer style={{ textAlign: 'center',fontWeight:'bolder' }}>
-          Design ©{new Date().getFullYear()} Created by wagerwyze
-        </Footer>
+                {/** Footer */}
+                <Footer style={{ textAlign: 'center',fontWeight:'bolder' }}>
+                  Design ©{new Date().getFullYear()} Created by wagerwyze
+                </Footer>
 
-        </Layout>
+              </Layout>
       
       </div>
 
