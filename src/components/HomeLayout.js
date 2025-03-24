@@ -9,8 +9,6 @@ import {
   MenuOutlined,
   SearchOutlined,
   UserOutlined,
- 
-  
 } from '@ant-design/icons';
 import { MdGroup, MdLogin, MdMailOutline, MdOutlineAutoGraph, MdPhone, MdShoppingCart, MdTableBar, MdVideocam } from "react-icons/md";
 import { Badge, UncontrolledDropdown, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem } from 'reactstrap';
@@ -20,7 +18,7 @@ import { PageHeader, Descriptions,Affix,notification,Modal,Alert } from 'antd';
 import { Link,withRouter} from 'react-router-dom';
 import axios from 'axios'
 import logo from '../assets/wagerwyze_logo.jpeg';
-import bkgrnd_imge from '../assets/purple_bg.jpg';
+import bkgrnd_imge from '../assets/greyback.jpg';
 import * as serverconfig from "./serverconn.js";
 
 const { Header, Content, Footer, Sider } = Layout;
