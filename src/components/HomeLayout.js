@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { Layout,Avatar, Menu, Breadcrumb,Button,Input,Row,Select,Form, Col, Divider,Card,Dropdown,Switch,
     message, Tooltip,Image,Drawer  } from 'antd';
 import {
- 
   HomeOutlined,
   MenuOutlined,
   SearchOutlined,
@@ -65,7 +64,7 @@ const HomeLayout = (props) => {
 
     return (
          <div >
-             <Layout className="site-layout" style={{background:'#fff',margin:10,display:'flex'}} >
+             <Layout className="site-layout" style={{background:'#fff',margin:10,display:'flex',flexDirection:'column'}} >
             
              {/** Header */}
 

@@ -1,1 +1,1 @@
-export const backendserverurl='http://127.0.0.1:8000'
+export const backendserverurl='https://1xx-a-be-back0000122-data.wagerwyze.online'

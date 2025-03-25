@@ -14,6 +14,8 @@ const { Option } = Select;
 const dateFormat = 'DD/MM/YYYY';
 
 const Signup = (props) => {
+  const [isMobile, setIsMobile] = useState(false);
+  
   const [dataloading, setdataloading] = useState(true);
   const [username, setusername] = useState('');
   const [password, setpassword] = useState('');
@@ -24,9 +26,28 @@ const Signup = (props) => {
   const antIcon = <LoadingOutlined style={{ fontSize: 60 }} spin />;
   const FormItem=Form.Item;
 
+
+    // Function to check if the screen size is mobile
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768); // Adjust breakpoint as needed
+    };
+
    //user effect
     useEffect(() => {
       setdataloading(false)
+
+      // Check initial screen size
+      checkIsMobile();
+
+      // Add event listener for screen resize
+      window.addEventListener('resize', checkIsMobile);
+
+      // Cleanup
+      return () => {
+        window.removeEventListener('resize', checkIsMobile);
+      };
+
+
     }, []);
 
 
@@ -69,12 +90,12 @@ const Signup = (props) => {
             );
          }else  {
           return (
-            <div style={{display:'flex',flexDirection:'column'}}>
+            <div style={{display:'flex',flexDirection:'column',flexWrap:'wrap'}}>
             
              {/** form */}
              <div style={{display:'flex',flexDirection:'row',justifyContent:'space-evenly',flexWrap:'wrap'}}>
 
-            <div style={{display: 'flex',flexDirection:'column',margin:10,width:'40%',justifyContent:'right' }}>
+            <div style={{display: 'flex',flexDirection:'column',margin:10,width:isMobile?'95%':'40%',justifyContent:'right',flexWrap:'wrap' }}>
              
             <Card style={{display: 'flex',flexDirection:'column',width:'100%'}}>
             <h3 style={{display:'flex',justifyContent:'center',color:'#5D3FD3',fontWeight:'bolder'}}>Create Account here</h3>

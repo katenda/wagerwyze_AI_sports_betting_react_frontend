@@ -14,6 +14,7 @@ const Insights = (props) => {
   const [report, setreport] = useState([]);
   const antIcon = <LoadingOutlined style={{ fontSize: 60 }} spin />;
   const [user_profile, setuser_profile] = useState({});
+    const [isMobile, setIsMobile] = useState(false);
   
   const history = useHistory();
 
@@ -43,12 +44,29 @@ const Insights = (props) => {
 
   ];
 
+
+    // Function to check if the screen size is mobile
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768); // Adjust breakpoint as needed
+    };
+  
    
    useEffect(() => {
-      //get date
-      check_login()
+        //get date
+        check_login()
+        load_initdata()
 
-      load_initdata()
+        // Check initial screen size
+        checkIsMobile();
+
+        // Add event listener for screen resize
+        window.addEventListener('resize', checkIsMobile);
+  
+        // Cleanup
+        return () => {
+          window.removeEventListener('resize', checkIsMobile);
+        };
+
      }, []);
 
 
@@ -96,19 +114,19 @@ const Insights = (props) => {
       
       {
         dataloading===true?
-        <div style={{display: 'flex',  justifyContent:'center', alignItems:'center' }}>
+        <div style={{display: 'flex',  justifyContent:'center', alignItems:'center',flexWrap:'wrap' }}>
           <Spin indicator={antIcon} />
         </div>
         :
-        <div style={{display: 'flex',  justifyContent:'center', alignItems:'center',margin:10,flexDirection:'column' }}>
+        <div style={{display: 'flex',  justifyContent:'center', alignItems:'center',margin:10,flexDirection:'column',flexWrap:'wrap',width:isMobile?'95%':'95%',overflowX:'auto' }}>
          
-          <div style={{display:'flex',flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
-            <h3 style={{color:'#fff'}}>UserName: {user_profile.username}</h3>
+          <div style={{display:'flex',flexDirection:'row',justifyContent:'flex-start',alignItems:'center',flexWrap:'wrap',overflowX:'auto',width:isMobile?'95%':'95%'}}>
+            <h3 style={{color:'#fff',display:'flex'}}>UserName: {user_profile.username}</h3>
               &nbsp;&nbsp;
               &nbsp;&nbsp;
               
               <NavLink to='/'>
-                <LogoutOutlined style={{ fontSize: '24px',color:'#5D3FD3'}} 
+                <LogoutOutlined style={{ fontSize: '24px',color:'#fff'}} 
                   onClick={()=>{
                     localStorage.removeItem('login')
                     //window.location.reload(false)
@@ -118,10 +136,13 @@ const Insights = (props) => {
                   }}
                 />
               </NavLink>
-
           </div>
+
           <Divider></Divider>
+
+          <div style={{display:'flex',flexWrap:'wrap',overflowX:'auto',flexDirection:'column',justifyContent:'center',width:isMobile?'95%':'95%'}}>
           <h3 style={{color:'#fff'}}>History</h3>
+
           <Table 
             scroll={{ x: 1000 }}
             columns={columns}
@@ -129,6 +150,9 @@ const Insights = (props) => {
             dataSource={report} 
             bordered
           />
+
+          </div>
+      
 
         </div>
       }

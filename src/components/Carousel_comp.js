@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import { Carousel,Button, Divider } from "antd";
 import { NavLink } from 'react-router-dom'
 
@@ -12,6 +12,26 @@ import img_8 from '../assets/c8.avif';
 
 
 const Carousel_comp = () => {
+    const [isMobile, setIsMobile] = useState(false);
+  
+   //user effect
+    useEffect(() => {
+
+      // Check initial screen size
+      checkIsMobile();
+
+      // Add event listener for screen resize
+      window.addEventListener('resize', checkIsMobile);
+
+      // Cleanup
+      return () => {
+        window.removeEventListener('resize', checkIsMobile);
+      };
+
+
+    }, []);
+
+
   const images = [
     img_2,
     img_3,
@@ -21,44 +41,50 @@ const Carousel_comp = () => {
     img_8
   ];
 
+    // Function to check if the screen size is mobile
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768); // Adjust breakpoint as needed
+    };
+
 
   return (
     <div style={{display:'flex',flexDirection:'column',justifyContent:'center'}}>
-       <h2 style={{display:'flex',justifyContent:'center',color:'#fff'}}>🔥 Top Betting Offers 🔥</h2>
+       <h2 style={{display:'flex',justifyContent:'center',color:'#fff'}}>🔥 Top Betting Insights 🔥</h2>
 
-    <Carousel autoplay arrows>
-      {
-        images.map((img)=>{
-          return(
-            <div >
-              <div style={{
-                height: '300px',
-                color: '#fff',
-                lineHeight: '200px',
-                textAlign: 'center',
-                //background: '#fff',
-                justifyContent:'center',
-                alignContent:'center',
-                display:'flex',
-                padding:5
-              }}>
-             <img src={img} alt={`slide-${img}`} className="carousel-image" />
-            </div>
-          </div>
-          )
-        })
+          <Carousel autoplay arrows >
+            {
+              images.map((img)=>{
+                return(
+                  <div >
+                    <div style={{
+                      height: '300px',
+                      color: '#fff',
+                      lineHeight: '200px',
+                      textAlign: 'center',
+                      //background: '#fff',
+                      justifyContent:'center',
+                      alignContent:'center',
+                      display:'flex',
+                      padding:5,
+                      width:isMobile?'95%':'100%'
+                    }}>
+                     <img src={img} alt={`slide-${img}`} className="carousel-image" />
+                  </div>
+                </div>
+                )
+              })
 
-      }
+            }
 
-  </Carousel>
+        </Carousel>
 
       <Divider></Divider>
 
-    <div style={{display:'flex',flexDirection:'row',justifyContent:'center',alignContent:'center',alignItems:'center'}}>
-      <h3 style={{fontWeight:'bolder',color:'#fff'}}>Do want the best insights? </h3>
-      &nbsp;&nbsp;
-      <NavLink to='/signup'><span style={{color:'blue',fontWeight:'bolder'}}> JOIN NOW</span></NavLink>
-    </div>
+      <div style={{display:'flex',flexDirection:'row',justifyContent:'center',alignContent:'center',alignItems:'center'}}>
+        <h3 style={{fontWeight:'bolder',color:'#fff'}}>Do want the best insights? </h3>
+        &nbsp;&nbsp;
+        <NavLink to='/signup'><span style={{color:'blue',fontWeight:'bolder'}}> JOIN NOW</span></NavLink>
+      </div>
 
    </div>
 

@@ -19,15 +19,32 @@ const Login = (props) => {
   const [username, setusername] = useState('');
   const [password, setpassword] = useState('');
   const [result, set_result] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
 
   const antIcon = <LoadingOutlined style={{ fontSize: 60 }} spin />;
   const FormItem=Form.Item;
   const history = useHistory();
 
+    // Function to check if the screen size is mobile
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768); // Adjust breakpoint as needed
+    };
 
    //user effect
     useEffect(() => {
       setdataloading(false)
+
+       // Check initial screen size
+       checkIsMobile();
+
+        // Add event listener for screen resize
+        window.addEventListener('resize', checkIsMobile);
+
+        // Cleanup
+        return () => {
+          window.removeEventListener('resize', checkIsMobile);
+        };
+
     }, []);
 
 
@@ -77,7 +94,7 @@ const Login = (props) => {
             );
          }else  {
           return (
-            <div style={{display:'flex',flexDirection:'column'}}>
+            <div style={{display:'flex',flexDirection:'column',flexWrap:'wrap'}}>
             
               {/** form */}
 
@@ -85,7 +102,7 @@ const Login = (props) => {
 
               {/**Beginning of right div */}
 
-            <div style={{display: 'flex',flexDirection:'column',margin:10,width:'40%',justifyContent:'center' }}>
+            <div style={{display: 'flex',flexDirection:'column',margin:10,width:isMobile?'95%':'40%',justifyContent:'center',flexWrap:'wrap' }}>
               <Card style={{display: 'flex',flexDirection:'column',width:'100%'}}>
             
 

@@ -25,14 +25,34 @@ const Predict = (props) => {
   const [graph, setgraph] = useState({});
   const [chartData, setChartData] = useState(null);
   const antIcon = <LoadingOutlined style={{ fontSize: 60 }} spin />;
+  
+  const [isMobile, setIsMobile] = useState(false);
 
   const FormItem=Form.Item;
 
    //user effect
     useEffect(() => {
       load_initdata()
+
+      // Check initial screen size
+      checkIsMobile();
+
+      // Add event listener for screen resize
+      window.addEventListener('resize', checkIsMobile);
+
+      // Cleanup
+      return () => {
+        window.removeEventListener('resize', checkIsMobile);
+      };
+
+
     }, []);
 
+
+      // Function to check if the screen size is mobile
+      const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768); // Adjust breakpoint as needed
+    };
 
 
     //load data
@@ -137,13 +157,13 @@ const Predict = (props) => {
             );
          }else  {
           return (
-            <div style={{display:'flex',flexDirection:'column'}}>
+            <div style={{display:'flex',flexDirection:'column',flexWrap:'wrap'}}>
             
               {/** form */}
 
              <div style={{display:'flex',flexDirection:'row',justifyContent:'space-evenly',flexWrap:'wrap'}}>
 
-            <div style={{display: 'flex',flexDirection:'column',margin:10,width:'45%',flexWrap:'wrap' }}>
+            <div style={{display: 'flex',flexDirection:'column',margin:10,width:isMobile?'95%':'45%',flexWrap:'wrap' }}>
               <Card style={{display: 'flex',flexDirection:'column',width:'100%'}}>
                 <h3 style={{color:'#5D3FD3',fontWeight:'bolder'}}>Prediction Instructions</h3>
                 <Divider></Divider>
@@ -196,7 +216,7 @@ const Predict = (props) => {
 
               {/**Beginning of right div */}
 
-            <div style={{display: 'flex',flexDirection:'column',margin:10,width:'45%',justifyContent:'right',flexWrap:'wrap'}}>
+            <div style={{display: 'flex',flexDirection:'column',margin:10,width:isMobile?'95%':'45%',justifyContent:'right',flexWrap:'wrap'}}>
               <Card style={{display: 'flex',flexDirection:'column',width:'100%'}}>
 
               <FormItem 
